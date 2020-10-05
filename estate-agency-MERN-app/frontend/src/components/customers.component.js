@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import axios from 'axios'
 const apiServerURL = "http://localhost:5000/"
 
-export default class AllCustomersComponent extends Component {
+export default class CustomersComponent extends Component {
     constructor(props) {
         super(props)
 
@@ -23,12 +23,18 @@ export default class AllCustomersComponent extends Component {
     }
 
     deleteCustomer = (customerId) => {
-        axios.delete(apiServerURL + customerId).then((res) => {
+        axios.delete(apiServerURL + "customers/" + customerId).then((res) => {
             console.log('delete func: ' + res)
-            window.location = '/'
+            // window.location = '/'
+            this.setState({
+                customers: this.state.customers.filter((elem) => {
+                    return elem._id !== customerId
+                })
+            })
         }).catch(err => {
             console.log(err)
         })
+
     }
 
     getCustomerList = () => {
@@ -45,10 +51,11 @@ export default class AllCustomersComponent extends Component {
         )
     }
 
+
     render() {
         return (
             <div>
-                <h1>Customers Page</h1>
+                <h3>Customers</h3>
                 <table className="table">
                     <thead>
                         <tr>
@@ -60,6 +67,7 @@ export default class AllCustomersComponent extends Component {
                         {this.getCustomerList()}
                     </tbody>
                 </table>
+                <button type="button" className="btn btn-success" onClick={() => { alert("create new customer") }}>Create a Customer</button>
             </div>
         )
     }
