@@ -1,12 +1,15 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const customerRoute = require('./routes/customers')
+const filepload = require('express-fileupload')
 const cors = require('cors')
+//cors is needed for axios to connect between back and frontends
 
 const app = express()
 app.use(express.json())
-//cors is needed for axios to connect between back and frontends
+app.use(filepload())
 app.use(cors())
+//cors is needed for axios to connect between back and frontends
 
 require('dotenv').config()
 const uri = process.env.ATLAS_URI
@@ -30,3 +33,13 @@ app.listen(port, () => {
 })
 
 app.use('/customers', customerRoute)
+
+app.route('/').post((req, res) => {
+    console.log(req.body)
+    if(req.files){
+        console.log("Files Initialised")
+    }
+    else{
+        console.log("FAIL! Files NOT Initialised")
+    }
+})
