@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
+import React from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
 const apiServerURL = "http://localhost:5000/"
 
-export default class CustomersComponent extends Component {
+export default class CustomersComponent extends React.Component {
     constructor(props) {
         super(props)
 
