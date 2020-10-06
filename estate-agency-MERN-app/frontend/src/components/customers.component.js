@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios'
+import { Link } from 'react-router-dom'
 const apiServerURL = "http://localhost:5000/"
 
 export default class CustomersComponent extends Component {
@@ -16,10 +17,14 @@ export default class CustomersComponent extends Component {
             this.setState({
                 customers: res.data
             })
-            console.log("component did mount all customers: " + res.data)
+            console.log(this.state.customers)
         }).catch(err => {
             console.log("component error: " + err)
         })
+    }
+
+    editCustomer = (customerId) => {
+        window.location = '/editCustomer'
     }
 
     deleteCustomer = (customerId) => {
@@ -44,11 +49,16 @@ export default class CustomersComponent extends Component {
                 return (
                     <tr key={elem._id}>
                         <td>{elem.customer_name}</td>
-                        <td>{elem._id} <a href='#' onClick={() => { this.deleteCustomer(elem._id) }}>delete</a></td>
+                        <td>{elem.customer_email}</td>
+                        <td><Link to={'/editCustomer/' + elem._id}>Edit</Link> | <a href='#' onClick={() => { this.deleteCustomer(elem._id) }}>Delete</a></td>
                     </tr>
                 )
             })
         )
+    }
+
+    openAddPage = () => {
+        window.location = '/newCustomer'
     }
 
 
@@ -59,15 +69,16 @@ export default class CustomersComponent extends Component {
                 <table className="table">
                     <thead>
                         <tr>
-                            <td>Name</td>
-                            <td>ID</td>
+                            <td><b>Name</b></td>
+                            <td><b>Email</b></td>
+                            <td></td>
                         </tr>
                     </thead>
                     <tbody >
                         {this.getCustomerList()}
                     </tbody>
                 </table>
-                <button type="button" className="btn btn-success" onClick={() => { alert("create new customer") }}>Create a Customer</button>
+                <button type="button" className="btn btn-success" onClick={() => { this.openAddPage() }}>Create a Customer</button>
             </div>
         )
     }

@@ -11,11 +11,23 @@ export default class addCustomer extends Component {
             customer_email: '',
         }
     }
+    componentDidMount() {
+        console.log(this.props.match.params.id)
+        axios.get(apiServerURL + "customers/" + this.props.match.params.id).then(res => {
+            this.setState({
+                customer_name: res.data.customer_name,
+                customer_email: res.data.customer_email
+            })
+            console.log("Got Customer Data: " + res.data)
+        }).catch(err => {
+            console.log(err)
+        })
+    }
 
     onSubmit = (event) => {
         event.preventDefault();
 
-        axios.post(apiServerURL + 'customers/add', this.state).then(res => {
+        axios.post(apiServerURL + 'customers/edit/' + this.props.match.params.id, this.state).then(res => {
             console.log(res.data + " added!")
             window.location = '/customers'
         }).catch(err => {
@@ -38,8 +50,8 @@ export default class addCustomer extends Component {
     render() {
         return (
             <div>
-                <h3>New Customer</h3>
                 <form onSubmit={this.onSubmit}>
+                    <h3>Edit Customer: {this.state.customer_name}</h3>
                     <div className="form-group">
                         <label>Name:</label>
                         <input required value={this.state.customer_name} onChange={this.onChangeName} className="form-control" />

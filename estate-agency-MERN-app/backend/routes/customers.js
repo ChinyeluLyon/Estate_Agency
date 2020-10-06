@@ -9,8 +9,11 @@ router.route('/').get((req, res) => {
 
 router.route('/add/').post((req, res) => {
     const customerName = req.body.customer_name
+    const customerEmail = req.body.customer_email
+
     const newCustomer = new CustomerModel({
-        customer_name: customerName
+        customer_name: customerName,
+        customer_email: customerEmail
     })
 
     newCustomer.save().then(() => {
@@ -18,6 +21,26 @@ router.route('/add/').post((req, res) => {
     }).catch((err) => {
         res.json('Add Customer Error: ' + err)
     })
+})
+
+router.route('/edit/:id').post((req, res) => {
+    const customerId = req.params.id
+    const customerName = req.body.customer_name
+    const customerEmail = req.body.customer_email
+
+    const updatedCustomer = new CustomerModel({
+        customer_name: customerName,
+        customer_email: customerEmail
+    })
+
+    CustomerModel.findByIdAndUpdate(
+        { _id: customerId },
+        {
+            customer_name: customerName,
+            customer_email: customerEmail
+        }).then(foundCustomer => {
+            res.json("Updated user " + customerId)
+        })
 })
 
 router.route('/:id').get((req, res) => {
