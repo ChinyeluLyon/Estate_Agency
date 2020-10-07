@@ -20,6 +20,7 @@ export default class HomeComponent extends React.Component {
         axios.post(apiServerURL, data).then(res => {
             console.log("data posted")
             console.log(res.data)
+            window.location = '/'
         }).catch(err => {
             console.log(err)
         })
@@ -34,7 +35,7 @@ export default class HomeComponent extends React.Component {
     render() {
         return (
             <div>
-                <h3>Home</h3>
+                <h5>Upload</h5>
                 <form onSubmit={this.onSubmit} encType="multipart/form-data">
                     <div>
                         <input type="file" onChange={this.onChangeHandler} />

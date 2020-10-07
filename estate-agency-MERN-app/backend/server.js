@@ -1,6 +1,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const customerRoute = require('./routes/customers')
+const propertiesRoute = require('./routes/properties')
 const filepload = require('express-fileupload')
 const fs = require('fs')
 
@@ -12,6 +13,9 @@ app.use(express.json())
 app.use(filepload())
 app.use(cors())
 //cors is needed for axios to connect between back and frontends
+
+app.use('/customers', customerRoute)
+app.use('/properties', propertiesRoute)
 
 require('dotenv').config()
 const uri = process.env.ATLAS_URI
@@ -34,15 +38,18 @@ app.listen(port, () => {
     console.log('Server is Running on port: ' + port)
 })
 
-app.use('/customers', customerRoute)
 
 app.route('/').post((req, res) => {
     res.json(req.files)
     console.log(req.files)
-    var name = req.files.name
-    fs.writeFile("CV.docx", req.files.data, function (err) {
-        if (err) throw err;
-        console.log('File is created successfully.');
-    });
+    var file = req.files.file
+
+    file.mv('./uploads/' + file.name, (err) => {
+        if (err) {
+            console.log(err)
+        } else {
+            console.log("File Uploaded")
+        }
+    })
 
 })

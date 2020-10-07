@@ -2,7 +2,7 @@ import React from 'react'
 import axios from 'axios'
 const apiServerURL = "http://localhost:5000/"
 
-export default class addCustomer extends React.Component {
+export default class AddCustomer extends React.Component {
     constructor(props) {
         super(props)
 
