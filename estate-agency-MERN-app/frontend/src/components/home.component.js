@@ -1,5 +1,5 @@
 import React from 'react'
-import Axios from 'axios'
+import axios from 'axios'
 const apiServerURL = "http://localhost:5000/"
 
 export default class HomeComponent extends React.Component {
@@ -7,29 +7,39 @@ export default class HomeComponent extends React.Component {
         super(props)
 
         this.state = {
-
+            file: null
         }
     }
 
     onSubmit = (event) => {
         event.preventDefault()
 
-        Axios.post(apiServerURL, { test: "test_data" }).catch(err => {
+        const data = new FormData()
+        data.append("file", this.state.file)
+
+        axios.post(apiServerURL, data).then(res => {
+            console.log("data posted")
+            console.log(res.data)
+        }).catch(err => {
             console.log(err)
         })
-        console.log(event.target.value)
+    }
 
+    onChangeHandler = (event) => {
+        this.setState({
+            file: event.target.files[0]
+        })
     }
 
     render() {
         return (
             <div>
                 <h3>Home</h3>
-                <form onSubmit={this.onSubmit}>
+                <form onSubmit={this.onSubmit} encType="multipart/form-data">
                     <div>
-                        <input type="file" />
+                        <input type="file" onChange={this.onChangeHandler} />
                     </div>
-                    <br/>
+                    <br />
                     <div>
                         <input type="submit" />
                     </div>

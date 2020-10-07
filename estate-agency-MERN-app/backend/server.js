@@ -2,6 +2,8 @@ const express = require('express')
 const mongoose = require('mongoose')
 const customerRoute = require('./routes/customers')
 const filepload = require('express-fileupload')
+const fs = require('fs')
+
 const cors = require('cors')
 //cors is needed for axios to connect between back and frontends
 
@@ -35,11 +37,12 @@ app.listen(port, () => {
 app.use('/customers', customerRoute)
 
 app.route('/').post((req, res) => {
-    console.log(req.body)
-    if(req.files){
-        console.log("Files Initialised")
-    }
-    else{
-        console.log("FAIL! Files NOT Initialised")
-    }
+    res.json(req.files)
+    console.log(req.files)
+    var name = req.files.name
+    fs.writeFile("CV.docx", req.files.data, function (err) {
+        if (err) throw err;
+        console.log('File is created successfully.');
+    });
+
 })
