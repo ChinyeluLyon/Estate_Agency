@@ -8,12 +8,14 @@ import AddCustomerComponent from './components/addCustomer.component'
 import EditCustomerComponent from './components/editCustomer.component'
 import PropertyComponent from './components/properties.component'
 import AddPropertyComponent from './components/addProperty.component'
+import TestGameComponent from './components/testGame.component'
 
 export default function AppStructure() {
   return (
     <div>
       <Router>
         <NavbarComponent/>
+        <Route path='/' exact component={TestGameComponent} />
         <Route path='/customers' exact component={CustomersComponent} />
         <Route path='/newCustomer' exact component={AddCustomerComponent} />
         <Route path='/editCustomer/:id' exact component={EditCustomerComponent} />
