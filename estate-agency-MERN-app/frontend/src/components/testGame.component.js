@@ -8,13 +8,15 @@ export default class TestGame extends React.Component {
         this.state = {
             xAxis: ['a', 'b', 'c', 'd', 'e'],
             yAxis: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-            soldiers: [],
+            wholeGrid: null,
+            p1Soldiers: 1,
+            p2Soldiers: 1,
             p1Money: '0',
             p2Money: '0'
         }
     }
-
-    grid = () => {
+    // createGgrid = () => {
+    componentDidMount(){
         const x = this.state.xAxis
         const y = this.state.yAxis
         const eachButton = []
@@ -40,11 +42,13 @@ export default class TestGame extends React.Component {
             )
         }
 
-        return whole
+        this.setState({ wholeGrid: whole })
     }
 
     placePieces = () => {
+        this.setState({ hi: 'tesy' })
 
+        return 0
     }
 
 
@@ -52,7 +56,7 @@ export default class TestGame extends React.Component {
         return (
             <div>
                 <h3>Test-Game</h3>
-                {this.grid()}
+                {this.state.wholeGrid}
             </div>
         )
     }
