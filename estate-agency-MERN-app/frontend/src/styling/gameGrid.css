@@ -1,4 +1,20 @@
-.gridBox{
+.gridBox:hover {
+    background-color: aquamarine;
+}
+.gridBox:active {
+    background-color: red;
+}
+
+.gridBox, .selectedBox {
+    vertical-align: top;
+    height: 8vmin;
     width: 8vmin;
-    height:  8vmin;
+}
+
+.selectedBox {
+    background-color: burlywood;
+}
+
+.wholeGame{
+    text-align: center;
 }
