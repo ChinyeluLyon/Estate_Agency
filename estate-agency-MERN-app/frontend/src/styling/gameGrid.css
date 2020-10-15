@@ -1,11 +1,8 @@
 .gridBox:hover {
     background-color: aquamarine;
 }
-.gridBox:active {
-    background-color: red;
-}
 
-.gridBox, .selectedBox {
+.gridBox, .selectedBox, .radius {
     vertical-align: top;
     height: 8vmin;
     width: 8vmin;
@@ -15,6 +12,10 @@
     background-color: burlywood;
 }
 
-.wholeGame{
+.wholeGame {
     text-align: center;
+}
+
+.radius {
+    background-color: coral;
 }
