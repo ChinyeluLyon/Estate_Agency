@@ -2,20 +2,20 @@
     background-color: aquamarine;
 }
 
-.gridBox, .selectedBox, .radius {
+.gridBox, .path, .selectedPiece {
     vertical-align: top;
     height: 8vmin;
     width: 8vmin;
 }
 
-.selectedBox {
-    background-color: burlywood;
+.path {
+    background-color: rgb(236, 141, 232);
 }
 
 .wholeGame {
     text-align: center;
 }
 
-.radius {
+.selectedPiece {
     background-color: coral;
 }
