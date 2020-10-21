@@ -5,7 +5,7 @@ export default class TestGame extends React.Component {
     constructor(props) {
         super(props)
 
-        const gridWidth = 10
+        const gridWidth = 5
         const gridHeight = 10
         const gridArea = gridWidth * gridHeight
 
@@ -61,22 +61,43 @@ export default class TestGame extends React.Component {
 
     displayPath = (boxNum) => {
         let steps = 2;
-
         boxNum = parseInt(boxNum)
         // let rowSelectedBox = Math.floor(boxNum / 5)
         // let columnSelectedBox = boxNum - (rowSelectedBox * 5)
         let tempClassNameArr = Array(this.state.gridHeight * this.state.gridWidth).fill('gridBox')
+
+        //set boundaries calculations
+        console.log("boxNum= " + boxNum)
+        let boxNumByRows = Math.floor(boxNum / this.state.gridWidth)
+        let boxNumByRowsStarWidth = boxNumByRows * this.state.gridWidth
+        let boxNumSubBoxNumByRowsStarWidth = boxNum - boxNumByRowsStarWidth
+        let positionsRight = (this.state.gridWidth - boxNumSubBoxNumByRowsStarWidth) - 1
+        let maxLeft = boxNum - boxNumSubBoxNumByRowsStarWidth
+        let maxRight = boxNum + positionsRight
+        console.log("boxNum / rows = " + boxNumByRows)
+        console.log("boxNum - (" + boxNumByRows + " * " + this.state.gridWidth + ") = " + boxNumByRowsStarWidth)
+        console.log(boxNum + " - " + boxNumByRowsStarWidth + " = " + boxNumSubBoxNumByRowsStarWidth)
+        console.log(boxNumSubBoxNumByRowsStarWidth + "th in the row (zero indexed)")
+        console.log("positions left = " + boxNumSubBoxNumByRowsStarWidth)
+        console.log("positions right = " + positionsRight)
+        console.log("max left = " + maxLeft)
+        console.log("max right = " + maxRight)
+
+
         tempClassNameArr[boxNum] = "selectedPiece"
         for (let i = 0; i < steps; i++) {
             let up = boxNum - (this.state.gridWidth * (i + 1))
             let down = (boxNum + (this.state.gridWidth * (i + 1)))
             let left = boxNum - (i + 1)
             let right = boxNum + (i + 1)
-
+            if (left >= maxLeft) {
+                tempClassNameArr[left] = 'path'
+            }
+            if (right <= maxRight) {
+                tempClassNameArr[right] = 'path'
+            }
             tempClassNameArr[up] = 'path'
             tempClassNameArr[down] = 'path'
-            tempClassNameArr[left] = 'path'
-            tempClassNameArr[right] = 'path'
             this.setState({
                 classArray: tempClassNameArr
             })
