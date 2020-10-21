@@ -5,15 +5,21 @@ export default class TestGame extends React.Component {
     constructor(props) {
         super(props)
 
-        let gridArr = Array(50).fill("")
+        const gridWidth = 10
+        const gridHeight = 10
+        const gridArea = gridWidth * gridHeight
+
+        let gridArr = Array(gridArea).fill("")
         //start pieces
         // gridArr[2] = 'X'
         // gridArr[47] = 'X'
 
         this.state = {
+            gridWidth: gridWidth,
+            gridHeight: gridHeight,
             grid: gridArr,
             mode: 'place',
-            classSelection: Array(50).fill('gridBox'),
+            classSelection: Array(gridArea).fill('gridBox'),
         }
     }
 
@@ -69,9 +75,8 @@ export default class TestGame extends React.Component {
         let xArr = []
         let yArr = []
         let count = 0
-
-        for (let i = 0; i < 10; i++) {
-            for (let j = 0; j < 5; j++) {
+        for (let i = 0; i < this.state.gridHeight; i++) {
+            for (let j = 0; j < this.state.gridWidth; j++) {
                 count++
                 xArr.push(
                     <button
@@ -98,24 +103,27 @@ export default class TestGame extends React.Component {
     }
 
     displayRaduis = (boxNum) => {
-        let steps = 1;
-        
+        let steps = 2;
+
         boxNum = parseInt(boxNum)
         // let rowSelectedBox = Math.floor(boxNum / 5)
         // let columnSelectedBox = boxNum - (rowSelectedBox * 5)
-        let up = boxNum - (5*steps)
-        let down = (boxNum + (5*steps))
-        let left = boxNum - steps
-        let right = boxNum + steps
+        let tempClassNameArr = Array(this.state.gridHeight * this.state.gridWidth).fill('gridBox')
 
-        let tempClassNameArr = Array(50).fill('gridBox')
-        tempClassNameArr[up] = 'selectedBox'
-        tempClassNameArr[down] = 'selectedBox'
-        tempClassNameArr[left] = 'selectedBox'
-        tempClassNameArr[right] = 'selectedBox'
-        this.setState({
-            classSelection: tempClassNameArr
-        })
+        for (let i = 0; i < steps; i++) {
+            let up = boxNum - (this.state.gridWidth * (i + 1))
+            let down = (boxNum + (this.state.gridWidth * (i + 1)))
+            let left = boxNum - (i + 1)
+            let right = boxNum + (i + 1)
+
+            tempClassNameArr[up] = 'selectedBox'
+            tempClassNameArr[down] = 'selectedBox'
+            tempClassNameArr[left] = 'selectedBox'
+            tempClassNameArr[right] = 'selectedBox'
+            this.setState({
+                classSelection: tempClassNameArr
+            })
+        }
         // selected.props.className = this.state.selectedBox
     }
 
