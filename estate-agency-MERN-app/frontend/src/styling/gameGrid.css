@@ -2,10 +2,11 @@
     background-color: aquamarine;
 }
 
-.gridBox, .path, .selectedPiece {
+.gridBox, .path, .selectedPiece, .debug {
     vertical-align: top;
     height: 8vmin;
     width: 8vmin;
+    border-width: 0.5px;
 }
 
 .path {
@@ -18,4 +19,8 @@
 
 .selectedPiece {
     background-color: coral;
+}
+
+.debug{
+    background-color: olive;
 }

@@ -5,8 +5,8 @@ export default class TestGame extends React.Component {
     constructor(props) {
         super(props)
 
-        const gridWidth = 5
-        const gridHeight = 10
+        const gridWidth = 13
+        const gridHeight = 13
         const gridArea = gridWidth * gridHeight
 
         let gridArr = Array(gridArea).fill("")
@@ -52,7 +52,6 @@ export default class TestGame extends React.Component {
                     })
                 }
                 break;
-
             default:
                 break;
         }
@@ -60,7 +59,7 @@ export default class TestGame extends React.Component {
 
 
     displayPath = (boxNum) => {
-        let steps = 2;
+        let steps = 5;
         boxNum = parseInt(boxNum)
         // let rowSelectedBox = Math.floor(boxNum / 5)
         // let columnSelectedBox = boxNum - (rowSelectedBox * 5)
@@ -83,7 +82,6 @@ export default class TestGame extends React.Component {
         console.log("max left = " + maxLeft)
         console.log("max right = " + maxRight)
 
-
         tempClassNameArr[boxNum] = "selectedPiece"
         for (let i = 0; i < steps; i++) {
             let up = boxNum - (this.state.gridWidth * (i + 1))
@@ -98,6 +96,19 @@ export default class TestGame extends React.Component {
             }
             tempClassNameArr[up] = 'path'
             tempClassNameArr[down] = 'path'
+
+
+            //calc diagonal posistions
+            if (i === steps - 1) {
+                let leftCurve1 = boxNum - (this.state.gridWidth + (steps - 1))
+                tempClassNameArr[leftCurve1] = 'path'
+                for (let j = 0; j < i; j++) {
+                    let tempCurve = leftCurve1 - (this.state.gridWidth - 1)
+                    tempClassNameArr[tempCurve] = 'path'
+                    leftCurve1 = tempCurve
+                }
+            }
+
             this.setState({
                 classArray: tempClassNameArr
             })
@@ -158,6 +169,7 @@ export default class TestGame extends React.Component {
                         onClick={this.clickBox}
                         value={count - 1}
                     >
+                        {/* {count-1} */}
                         {this.state.grid[count - 1]}
                     </button>
                 )
