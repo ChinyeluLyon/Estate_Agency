@@ -162,10 +162,12 @@ export default class TestGame extends React.Component {
         for (let i = 0; i < this.state.grid.length; i++) {
             if( i != boxNum){
                 if (this.state.grid[i] === "X" || this.state.grid[i] === "O") {
-                    tempClassNameArr[i] = "attackable"
+                    tempClassNameArr[i] = "gridBox"
                 }
             }
         }
+
+        //check if attackable
 
         this.setState({
             classArray: tempClassNameArr
