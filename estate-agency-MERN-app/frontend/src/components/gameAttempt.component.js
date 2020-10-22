@@ -24,7 +24,8 @@ export default class TestGame extends React.Component {
             player2Money: 50,
             currentTurn: 1,
             currentTurnPiece: "X",
-            pieceCost: 10
+            pieceCost: 10,
+            pieceHP: 100
         }
     }
 
@@ -160,7 +161,7 @@ export default class TestGame extends React.Component {
 
         //check if square occupied
         for (let i = 0; i < this.state.grid.length; i++) {
-            if( i != boxNum){
+            if (i != boxNum) {
                 if (this.state.grid[i] === "X" || this.state.grid[i] === "O") {
                     tempClassNameArr[i] = "gridBox"
                 }
@@ -168,6 +169,17 @@ export default class TestGame extends React.Component {
         }
 
         //check if attackable
+        let attack = this.state.currentTurn === 1 ? "O" : "X"
+        for (let i = 0; i < tempClassNameArr.length; i++) {
+            if (tempClassNameArr[i] === "path") {
+                if (this.state.grid[i + 1] === attack) {
+                    tempClassNameArr[i + 1] = "attackable"
+                }
+                else if (this.state.grid[i - 1] === attack) {
+                    tempClassNameArr[i - 1] = "attackable"
+                }
+            }
+        }
 
         this.setState({
             classArray: tempClassNameArr
