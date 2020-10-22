@@ -158,6 +158,15 @@ export default class TestGame extends React.Component {
             }
         }
 
+        //check if square occupied
+        for (let i = 0; i < this.state.grid.length; i++) {
+            if( i != boxNum){
+                if (this.state.grid[i] === "X" || this.state.grid[i] === "O") {
+                    tempClassNameArr[i] = "attackable"
+                }
+            }
+        }
+
         this.setState({
             classArray: tempClassNameArr
         })

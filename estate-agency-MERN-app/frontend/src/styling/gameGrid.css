@@ -2,7 +2,7 @@
     background-color: aquamarine;
 }
 
-.gridBox, .path, .selectedPiece, .debug {
+.gridBox, .path, .selectedPiece, .attackable {
     vertical-align: top;
     height: 8vmin;
     width: 8vmin;
@@ -22,6 +22,6 @@
     background-color: coral;
 }
 
-.debug{
-    background-color: olive;
+.attackable {
+    background-color: red;
 }
