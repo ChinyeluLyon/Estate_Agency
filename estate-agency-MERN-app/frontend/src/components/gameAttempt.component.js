@@ -20,10 +20,11 @@ export default class TestGame extends React.Component {
             grid: gridArr,
             mode: 'place',
             classArray: Array(gridArea).fill('gridBox'),
-            player1Money: 10,
-            player2Money: 10,
+            player1Money: 50,
+            player2Money: 50,
             currentTurn: 1,
-            currentTurnPiece: "X"
+            currentTurnPiece: "X",
+            pieceCost: 10
         }
     }
 
@@ -34,11 +35,24 @@ export default class TestGame extends React.Component {
         switch (this.state.mode) {
             case "place":
                 console.log("place mode")
-                let tempArr = this.state.grid
-                tempArr[boxNum] = this.state.currentTurnPiece
-                this.setState({
-                    grid: tempArr
-                })
+                let currentPlayerMoney = this.state.currentTurn === 1 ? this.state.player1Money : this.state.player2Money
+
+                if (currentPlayerMoney - this.state.pieceCost >= 0 && this.state.grid[boxNum] === "") {
+                    let tempArr = this.state.grid
+                    tempArr[boxNum] = this.state.currentTurnPiece
+                    this.state.currentTurn === 1 ?
+                        (this.setState({
+                            player1Money: this.state.player1Money - this.state.pieceCost
+                        })) : (this.setState({
+                            player2Money: this.state.player2Money - this.state.pieceCost
+                        }))
+
+                    this.setState({
+                        grid: tempArr
+                    })
+                } else if (currentPlayerMoney - this.state.pieceCost < 0) {
+                    alert("Out of funds")
+                }
                 break;
             case "move":
                 console.log("move mode")
@@ -239,7 +253,7 @@ export default class TestGame extends React.Component {
     render() {
         return (
             <div>
-                <h1>Game</h1>
+                <h1>War-Game</h1>
                 <h2>It's Player {this.state.currentTurn}'s turn</h2>
                 <h2>Player 1: £{this.state.player1Money}</h2>
                 <h2>Player 2: £{this.state.player2Money}</h2>
