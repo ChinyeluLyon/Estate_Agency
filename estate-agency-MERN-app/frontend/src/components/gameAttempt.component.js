@@ -59,7 +59,7 @@ export default class TestGame extends React.Component {
 
 
     displayPath = (boxNum) => {
-        let steps = 5;
+        let steps = 3;
         boxNum = parseInt(boxNum)
         // let rowSelectedBox = Math.floor(boxNum / 5)
         // let columnSelectedBox = boxNum - (rowSelectedBox * 5)
@@ -97,22 +97,50 @@ export default class TestGame extends React.Component {
             tempClassNameArr[up] = 'path'
             tempClassNameArr[down] = 'path'
 
-
-            //calc diagonal posistions
-            if (i === steps - 1) {
-                let leftCurve1 = boxNum - (this.state.gridWidth + (steps - 1))
-                tempClassNameArr[leftCurve1] = 'path'
-                for (let j = 0; j < i; j++) {
-                    let tempCurve = leftCurve1 - (this.state.gridWidth - 1)
-                    tempClassNameArr[tempCurve] = 'path'
-                    leftCurve1 = tempCurve
-                }
-            }
-
-            this.setState({
-                classArray: tempClassNameArr
-            })
         }
+        //calc diagonal positions
+
+        let tempBoxNum = boxNum
+        for (let j = 1; j <= steps; j++) {
+            tempBoxNum = tempBoxNum - this.state.gridWidth
+            let tempBoxNum2 = tempBoxNum
+            for (let k = 0; k < (steps - j); k++) {
+                tempBoxNum2++
+                tempClassNameArr[tempBoxNum2] = "path"
+            }
+        }
+        let tempBoxNum3 = boxNum
+        for (let j = 1; j <= steps; j++) {
+            tempBoxNum3 = tempBoxNum3 - this.state.gridWidth
+            let tempBoxNum4 = tempBoxNum3
+            for (let k = 0; k < (steps - j); k++) {
+                tempBoxNum4--
+                tempClassNameArr[tempBoxNum4] = "path"
+            }
+        }
+        let tempBoxNum5 = boxNum
+        for (let j = 1; j <= steps; j++) {
+            tempBoxNum5 = tempBoxNum5 + this.state.gridWidth
+            let tempBoxNum6 = tempBoxNum5
+            for (let k = 0; k < (steps - j); k++) {
+                tempBoxNum6++
+                tempClassNameArr[tempBoxNum6] = "path"
+            }
+        }
+        let tempBoxNum7 = boxNum
+        for (let j = 1; j <= steps; j++) {
+            tempBoxNum7 = tempBoxNum7 + this.state.gridWidth
+            let tempBoxNum8 = tempBoxNum7
+            for (let k = 0; k < (steps - j); k++) {
+                tempBoxNum8--
+                tempClassNameArr[tempBoxNum8] = "path"
+            }
+        }
+
+
+        this.setState({
+            classArray: tempClassNameArr
+        })
     }
 
     detectMovement = (boxNum) => {
