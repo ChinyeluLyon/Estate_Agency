@@ -59,28 +59,11 @@ export default class TestGame extends React.Component {
 
 
     displayPath = (boxNum) => {
-        let steps = 3;
+        let steps = 2;
         boxNum = parseInt(boxNum)
         // let rowSelectedBox = Math.floor(boxNum / 5)
         // let columnSelectedBox = boxNum - (rowSelectedBox * 5)
         let tempClassNameArr = Array(this.state.gridHeight * this.state.gridWidth).fill('gridBox')
-
-        //set boundaries calculations
-        console.log("boxNum= " + boxNum)
-        let boxNumByRows = Math.floor(boxNum / this.state.gridWidth)
-        let boxNumByRowsStarWidth = boxNumByRows * this.state.gridWidth
-        let boxNumSubBoxNumByRowsStarWidth = boxNum - boxNumByRowsStarWidth
-        let positionsRight = (this.state.gridWidth - boxNumSubBoxNumByRowsStarWidth) - 1
-        let maxLeft = boxNum - boxNumSubBoxNumByRowsStarWidth
-        let maxRight = boxNum + positionsRight
-        console.log("boxNum / rows = " + boxNumByRows)
-        console.log("boxNum - (" + boxNumByRows + " * " + this.state.gridWidth + ") = " + boxNumByRowsStarWidth)
-        console.log(boxNum + " - " + boxNumByRowsStarWidth + " = " + boxNumSubBoxNumByRowsStarWidth)
-        console.log(boxNumSubBoxNumByRowsStarWidth + "th in the row (zero indexed)")
-        console.log("positions left = " + boxNumSubBoxNumByRowsStarWidth)
-        console.log("positions right = " + positionsRight)
-        console.log("max left = " + maxLeft)
-        console.log("max right = " + maxRight)
 
         tempClassNameArr[boxNum] = "selectedPiece"
         for (let i = 0; i < steps; i++) {
@@ -88,18 +71,14 @@ export default class TestGame extends React.Component {
             let down = (boxNum + (this.state.gridWidth * (i + 1)))
             let left = boxNum - (i + 1)
             let right = boxNum + (i + 1)
-            if (left >= maxLeft) {
-                tempClassNameArr[left] = 'path'
-            }
-            if (right <= maxRight) {
-                tempClassNameArr[right] = 'path'
-            }
+
+            tempClassNameArr[left] = 'path'
+            tempClassNameArr[right] = 'path'
             tempClassNameArr[up] = 'path'
             tempClassNameArr[down] = 'path'
 
         }
         //calc diagonal positions
-
         let tempBoxNum = boxNum
         for (let j = 1; j <= steps; j++) {
             tempBoxNum = tempBoxNum - this.state.gridWidth
@@ -136,6 +115,48 @@ export default class TestGame extends React.Component {
                 tempClassNameArr[tempBoxNum8] = "path"
             }
         }
+
+        //calc bounds proper
+        let row = Math.floor(boxNum / this.state.gridWidth)
+        let column = boxNum - (row * this.state.gridWidth)
+        let spaceRight = this.state.gridWidth - column - 1
+        console.log("row " + row)
+        console.log("column " + column)
+        console.log("space left " + column)
+        console.log("space right " + (this.state.gridWidth - column - 1))
+        if (column >= steps && spaceRight >= steps) {
+            console.log("fits fine")
+        }
+        else if (column < steps) {
+            console.log("not enough on left")
+            console.log("columns 0 to " + (column + steps))
+            let remainingRight = this.state.gridWidth - (column + steps)
+            for (let iterator = 0; iterator < this.state.gridHeight; iterator++) {
+                let limitR = (this.state.gridWidth * iterator) + (column + steps + 1)
+                console.log("limitR " + limitR)
+                for (let index = 0; index < remainingRight - 1; index++) {
+                    console.log("dbg: " + (limitR + index))
+                    tempClassNameArr[limitR + index] = "gridBox"
+                }
+            }
+        }
+        else if (spaceRight < steps) {
+            console.log("not enough on right")
+            console.log("columns " + (column - steps) + " to " + (this.state.gridWidth - 1))
+            let remainingLeft = (column - steps - 1)
+            console.log("remainingLeft " + remainingLeft)
+            for (let i = 0; i < this.state.gridHeight; i++) {
+                console.log("startL: " + (i * this.state.gridWidth))
+                let startL = (i * this.state.gridWidth)
+                for (let j = 0; j < (remainingLeft + 1); j++) {
+                    console.log(startL + j)
+                    tempClassNameArr[startL + j] = "gridBox"
+                }
+            }
+        }
+
+
+
 
 
         this.setState({
@@ -181,6 +202,22 @@ export default class TestGame extends React.Component {
         })
     }
 
+    rightClick = (event) => {
+        event.preventDefault();
+
+        if (this.state.mode === "move") {
+            this.setState({
+                mode: "place"
+            })
+        }
+        else {
+            this.setState({
+                mode: "move"
+            })
+        }
+
+    }
+
     createGrid = () => {
         let xArr = []
         let yArr = []
@@ -195,6 +232,7 @@ export default class TestGame extends React.Component {
                         onMouseDown={this.mouseDownBox}
                         onMouseUp={this.mouseUpBox}
                         onClick={this.clickBox}
+                        onContextMenu={this.rightClick}
                         value={count - 1}
                     >
                         {/* {count-1} */}
