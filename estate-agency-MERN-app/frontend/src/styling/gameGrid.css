@@ -2,7 +2,7 @@
     background-color: aquamarine;
 }
 
-.gridBox, .path, .selectedPiece, .attackable {
+.gridBox, .path, .selectedPiece, .attackable, .soldier, .soldier2{
     vertical-align: top;
     height: 8vmin;
     width: 8vmin;
@@ -24,4 +24,15 @@
 
 .attackable {
     background-color: red;
+}
+
+.soldier{
+    background-image: url(../images/soldier.png);
+    background-repeat: no-repeat;
+    background-size: 50px;
+}
+.soldier2{
+    background-image: url(../images/soldier2.png);
+    background-repeat: no-repeat;
+    background-size: 50px;
 }

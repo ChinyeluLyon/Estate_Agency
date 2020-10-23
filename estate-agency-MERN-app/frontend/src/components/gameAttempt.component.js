@@ -1,5 +1,7 @@
 import React from 'react'
 import '../styling/gameGrid.css'
+import soldier from '../images/soldier.png'
+import soldier2 from '../images/soldier2.png'
 
 export default class TestGame extends React.Component {
     constructor(props) {
@@ -29,9 +31,10 @@ export default class TestGame extends React.Component {
         }
     }
 
-
     clickBox = (event) => {
         let boxNum = event.target.value
+        console.log(event.target)
+        console.log(event.target.value)
 
         switch (this.state.mode) {
             case "place":
@@ -39,7 +42,7 @@ export default class TestGame extends React.Component {
                 let currentPlayerMoney = this.state.currentTurn === 1 ? this.state.player1Money : this.state.player2Money
 
                 if (currentPlayerMoney - this.state.pieceCost >= 0 && this.state.grid[boxNum] === "") {
-                    let tempArr = this.state.grid
+                    let tempArr = this.state.grid.slice()
                     tempArr[boxNum] = this.state.currentTurnPiece
                     this.state.currentTurn === 1 ?
                         (this.setState({
@@ -76,6 +79,9 @@ export default class TestGame extends React.Component {
         }
     }
 
+    displayHealth = () => {
+
+    }
 
     displayPath = (boxNum) => {
         let steps = 2;
@@ -161,7 +167,7 @@ export default class TestGame extends React.Component {
 
         //check if square occupied
         for (let i = 0; i < this.state.grid.length; i++) {
-            if (i != boxNum) {
+            if (i !== boxNum) {
                 if (this.state.grid[i] === "X" || this.state.grid[i] === "O") {
                     tempClassNameArr[i] = "gridBox"
                 }
@@ -178,6 +184,12 @@ export default class TestGame extends React.Component {
                 else if (this.state.grid[i - 1] === attack) {
                     tempClassNameArr[i - 1] = "attackable"
                 }
+                else if (this.state.grid[i - this.state.gridWidth] === attack) {
+                    tempClassNameArr[i - this.state.gridWidth] = "attackable"
+                }
+                else if (this.state.grid[i + this.state.gridWidth] === attack) {
+                    tempClassNameArr[i + this.state.gridWidth] = "attackable"
+                }
             }
         }
 
@@ -189,7 +201,7 @@ export default class TestGame extends React.Component {
     detectMovement = (boxNum) => {
         let pieceStartPos = this.state.classArray.indexOf("selectedPiece")
         let pieceEndPos = boxNum
-        let tempGrid = this.state.grid
+        let tempGrid = this.state.grid.slice()
         tempGrid[pieceStartPos] = ""
         tempGrid[pieceEndPos] = this.state.currentTurnPiece
 
@@ -241,6 +253,14 @@ export default class TestGame extends React.Component {
         }
     }
 
+    soldierChoice = (boxNum) => {
+        if (this.state.grid[boxNum] === "X") {
+            return "soldier"
+        } else if (this.state.grid[boxNum] === "O") {
+            return "soldier2"
+        }
+    }
+
     createGrid = () => {
         let xArr = []
         let yArr = []
@@ -250,14 +270,14 @@ export default class TestGame extends React.Component {
                 count++
                 xArr.push(
                     <button
-                        className={this.state.classArray[count - 1]}
+                        className={this.state.classArray[count - 1] + " " + this.soldierChoice(count - 1)}
                         key={count - 1}
                         onClick={this.clickBox}
                         onContextMenu={this.rightClick}
                         value={count - 1}
                     >
-                        {/* {count-1} */}
-                        {this.state.grid[count - 1]}
+                        {/* {this.state.grid[count - 1]} */}
+                        {/* {this.soldierChoice(count - 1)} */}
                     </button>
                 )
             }
