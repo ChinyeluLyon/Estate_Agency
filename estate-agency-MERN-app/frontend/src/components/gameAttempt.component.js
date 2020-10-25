@@ -24,14 +24,14 @@ export default class TestGame extends React.Component {
             currentTurnPiece: "X",
             currentlyAttackable: 0,
             pieceCost: 10,
-            pieceHP: 100,
+            piecesHP: Array(gridArea).fill(100),
             numOfTurns: 0,
             movedThisTurn: Array(gridArea).fill(false)
         }
     }
 
     clickBox = (event) => {
-        let boxNum = event.target.value
+        let boxNum = parseInt(event.target.value)
         switch (this.state.mode) {
             case "place":
                 console.log("place mode")
@@ -70,6 +70,7 @@ export default class TestGame extends React.Component {
                     this.setState({
                         movedThisTurn: tempMovedThisTurn
                     })
+
                 }
 
                 else {
@@ -78,6 +79,15 @@ export default class TestGame extends React.Component {
                     this.setState({
                         classArray: selectionArr,
                         currentlyAttackable: 0
+                    })
+                }
+                break;
+            case "attack":
+                console.log("attack mode")
+                if (this.state.classArray[boxNum] === "attackable") {
+                    console.log(this.state.classArray.indexOf("selectedPiece") + " attacking " + boxNum)
+                    this.setState({
+                        mode: "move"
                     })
                 }
                 break;
@@ -215,9 +225,38 @@ export default class TestGame extends React.Component {
         tempGrid[pieceStartPos] = ""
         tempGrid[pieceEndPos] = this.state.currentTurnPiece
 
+        let tempClassArr = Array(this.state.gridArea).fill('gridBox')
+        tempClassArr[boxNum] = "selectedPiece"
+
+        if (this.state.classArray[(boxNum + 1)] === "attackable") {
+            tempClassArr[(boxNum + 1)] = "attackable"
+        }
+        if (this.state.classArray[boxNum - 1] === "attackable") {
+            tempClassArr[boxNum - 1] = "attackable"
+        }
+        if (this.state.classArray[boxNum + this.state.gridWidth] === "attackable") {
+            tempClassArr[boxNum + this.state.gridWidth] = "attackable"
+        }
+        if (this.state.classArray[boxNum - this.state.gridWidth] === "attackable") {
+            tempClassArr[boxNum - this.state.gridWidth] = "attackable"
+        }
+
+        let attackable = 0
+        for (let i = 0; i < tempClassArr.length; i++) {
+            if (tempClassArr[i] === "attackable") {
+                attackable++
+            }
+        }
+        if (attackable > 0) {
+            this.setState({
+                mode: "attack"
+            })
+        }
+
         this.setState({
             grid: tempGrid,
-            classArray: Array(this.state.gridArea).fill('gridBox')
+            classArray: tempClassArr,
+            currentlyAttackable: attackable
         })
     }
 
@@ -262,7 +301,8 @@ export default class TestGame extends React.Component {
             })
         }
         this.setState({
-            movedThisTurn: Array(this.state.gridArea).fill(false)
+            movedThisTurn: Array(this.state.gridArea).fill(false),
+            classArray: Array(this.state.gridArea).fill("gridBox")
         })
         this.trackTurns()
     }
