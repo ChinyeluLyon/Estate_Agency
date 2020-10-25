@@ -30,6 +30,29 @@ export default class TestGame extends React.Component {
         }
     }
 
+    attackingAction = (attacker, defender) => {
+        let attackerHP = this.state.piecesHP[attacker]
+        let defenderHP = this.state.piecesHP[defender]
+
+        if (attackerHP == defenderHP) {
+            let tempDefenderHP = Math.floor(defenderHP * 0.8)
+            console.log("DAMAGE: " + (defenderHP - tempDefenderHP))
+            defenderHP = tempDefenderHP
+        }
+        else if (attackerHP > defenderHP) {
+            let tempDefenderHP = Math.floor((defenderHP - (attackerHP - defenderHP) / 100))
+            console.log("DAMAGE: " + (defenderHP - tempDefenderHP))
+            defenderHP = tempDefenderHP
+        }
+        let tempPiecesHP = this.state.piecesHP.slice()
+        tempPiecesHP[attacker] = attackerHP
+        tempPiecesHP[defender] = defenderHP
+        this.setState({
+            piecesHP: tempPiecesHP
+        })
+
+    }
+
     clickBox = (event) => {
         let boxNum = parseInt(event.target.value)
         switch (this.state.mode) {
@@ -86,6 +109,7 @@ export default class TestGame extends React.Component {
                 console.log("attack mode")
                 if (this.state.classArray[boxNum] === "attackable") {
                     console.log(this.state.classArray.indexOf("selectedPiece") + " attacking " + boxNum)
+                    this.attackingAction(this.state.classArray.indexOf("selectedPiece"), boxNum)
                     this.setState({
                         mode: "move"
                     })
@@ -224,6 +248,10 @@ export default class TestGame extends React.Component {
         let tempGrid = this.state.grid.slice()
         tempGrid[pieceStartPos] = ""
         tempGrid[pieceEndPos] = this.state.currentTurnPiece
+        let tempPiecesHP = this.state.piecesHP.slice()
+        tempPiecesHP[pieceStartPos] = 100
+        tempPiecesHP[pieceEndPos] = this.state.piecesHP[pieceStartPos]
+
 
         let tempClassArr = Array(this.state.gridArea).fill('gridBox')
         tempClassArr[boxNum] = "selectedPiece"
@@ -256,7 +284,8 @@ export default class TestGame extends React.Component {
         this.setState({
             grid: tempGrid,
             classArray: tempClassArr,
-            currentlyAttackable: attackable
+            currentlyAttackable: attackable,
+            piecesHP: tempPiecesHP
         })
     }
 
@@ -326,10 +355,10 @@ export default class TestGame extends React.Component {
 
     displayHealth = (boxNum) => {
         if (this.state.grid[boxNum] === "X") {
-            return (<b className="health">100%</b>)
+            return (<b className="health">{this.state.piecesHP[boxNum]}HP</b>)
         }
         else if (this.state.grid[boxNum] === "O") {
-            return (<b className="health">100%</b>)
+            return (<b className="health">{this.state.piecesHP[boxNum]}HP</b>)
         }
     }
 
@@ -348,7 +377,7 @@ export default class TestGame extends React.Component {
                         onContextMenu={this.rightClick}
                         value={count - 1}
                     >
-                        {/* {this.displayHealth(count - 1)} */}
+                        {this.displayHealth(count - 1)}
                     </button>
                 )
             }
