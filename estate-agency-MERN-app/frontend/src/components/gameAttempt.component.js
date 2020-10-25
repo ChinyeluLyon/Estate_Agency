@@ -11,31 +11,27 @@ export default class TestGame extends React.Component {
         const gridHeight = 8
         const gridArea = gridWidth * gridHeight
 
-        let gridArr = Array(gridArea).fill("")
-        //start pieces
-        // gridArr[2] = 'X'
-        // gridArr[47] = 'X'
-
         this.state = {
             gridWidth: gridWidth,
             gridHeight: gridHeight,
-            grid: gridArr,
+            gridArea: gridArea,
+            grid: Array(gridArea).fill(""),
             mode: 'place',
             classArray: Array(gridArea).fill('gridBox'),
             player1Money: 50,
             player2Money: 50,
             currentTurn: 1,
             currentTurnPiece: "X",
+            currentlyAttackable: 0,
             pieceCost: 10,
-            pieceHP: 100
+            pieceHP: 100,
+            numOfTurns: 0,
+            movedThisTurn: Array(gridArea).fill(false)
         }
     }
 
     clickBox = (event) => {
         let boxNum = event.target.value
-        console.log(event.target)
-        console.log(event.target.value)
-
         switch (this.state.mode) {
             case "place":
                 console.log("place mode")
@@ -61,16 +57,27 @@ export default class TestGame extends React.Component {
             case "move":
                 console.log("move mode")
                 if (this.state.grid[boxNum] === this.state.currentTurnPiece) {
-                    this.displayPath(boxNum)
+                    if (this.state.movedThisTurn[boxNum]) {
+                        alert("already moved")
+                    } else {
+                        this.displayPath(boxNum)
+                    }
                 }
                 else if (this.state.classArray[boxNum] === "path") {
                     this.detectMovement(boxNum)
+                    let tempMovedThisTurn = this.state.movedThisTurn.slice()
+                    tempMovedThisTurn[boxNum] = true
+                    this.setState({
+                        movedThisTurn: tempMovedThisTurn
+                    })
                 }
+
                 else {
                     // clear the path
-                    let selectionArr = Array(this.state.gridHeight * this.state.gridWidth).fill('gridBox')
+                    let selectionArr = Array(this.state.gridArea).fill('gridBox')
                     this.setState({
-                        classArray: selectionArr
+                        classArray: selectionArr,
+                        currentlyAttackable: 0
                     })
                 }
                 break;
@@ -79,16 +86,12 @@ export default class TestGame extends React.Component {
         }
     }
 
-    displayHealth = () => {
-
-    }
-
     displayPath = (boxNum) => {
         let steps = 2;
         boxNum = parseInt(boxNum)
         // let rowSelectedBox = Math.floor(boxNum / 5)
         // let columnSelectedBox = boxNum - (rowSelectedBox * 5)
-        let tempClassNameArr = Array(this.state.gridHeight * this.state.gridWidth).fill('gridBox')
+        let tempClassNameArr = Array(this.state.gridArea).fill('gridBox')
 
         tempClassNameArr[boxNum] = "selectedPiece"
         for (let i = 0; i < steps; i++) {
@@ -181,20 +184,27 @@ export default class TestGame extends React.Component {
                 if (this.state.grid[i + 1] === attack) {
                     tempClassNameArr[i + 1] = "attackable"
                 }
-                else if (this.state.grid[i - 1] === attack) {
+                if (this.state.grid[i - 1] === attack) {
                     tempClassNameArr[i - 1] = "attackable"
                 }
-                else if (this.state.grid[i - this.state.gridWidth] === attack) {
+                if (this.state.grid[i - this.state.gridWidth] === attack) {
                     tempClassNameArr[i - this.state.gridWidth] = "attackable"
                 }
-                else if (this.state.grid[i + this.state.gridWidth] === attack) {
+                if (this.state.grid[i + this.state.gridWidth] === attack) {
                     tempClassNameArr[i + this.state.gridWidth] = "attackable"
                 }
             }
         }
+        let attackable = 0
+        for (let i = 0; i < tempClassNameArr.length; i++) {
+            if (tempClassNameArr[i] === "attackable") {
+                attackable++
+            }
+        }
 
         this.setState({
-            classArray: tempClassNameArr
+            classArray: tempClassNameArr,
+            currentlyAttackable: attackable
         })
     }
 
@@ -207,7 +217,7 @@ export default class TestGame extends React.Component {
 
         this.setState({
             grid: tempGrid,
-            classArray: Array(this.state.gridHeight * this.state.gridWidth).fill('gridBox')
+            classArray: Array(this.state.gridArea).fill('gridBox')
         })
     }
 
@@ -251,6 +261,19 @@ export default class TestGame extends React.Component {
                 currentTurnPiece: "X"
             })
         }
+        this.setState({
+            movedThisTurn: Array(this.state.gridArea).fill(false)
+        })
+        this.trackTurns()
+    }
+
+    trackTurns = () => {
+        let tempNumOfTurns = this.state.numOfTurns
+        tempNumOfTurns++
+        this.setState({
+            numOfTurns: tempNumOfTurns
+        })
+
     }
 
     soldierChoice = (boxNum) => {
@@ -258,6 +281,15 @@ export default class TestGame extends React.Component {
             return "soldier"
         } else if (this.state.grid[boxNum] === "O") {
             return "soldier2"
+        }
+    }
+
+    displayHealth = (boxNum) => {
+        if (this.state.grid[boxNum] === "X") {
+            return (<b className="health">100%</b>)
+        }
+        else if (this.state.grid[boxNum] === "O") {
+            return (<b className="health">100%</b>)
         }
     }
 
@@ -276,8 +308,7 @@ export default class TestGame extends React.Component {
                         onContextMenu={this.rightClick}
                         value={count - 1}
                     >
-                        {/* {this.state.grid[count - 1]} */}
-                        {/* {this.soldierChoice(count - 1)} */}
+                        {/* {this.displayHealth(count - 1)} */}
                     </button>
                 )
             }
@@ -300,6 +331,8 @@ export default class TestGame extends React.Component {
                 <h2>It's Player {this.state.currentTurn}'s turn</h2>
                 <h2>Player 1: £{this.state.player1Money}</h2>
                 <h2>Player 2: £{this.state.player2Money}</h2>
+                <h3>turn no. {this.state.numOfTurns}</h3>
+                <h3>attackable. {this.state.currentlyAttackable}</h3>
                 <button onClick={this.clickPlace}>Place</button>
                 <button onClick={this.clickMove}>Move</button>
                 <button onClick={this.switchTurn}>End Turn</button>

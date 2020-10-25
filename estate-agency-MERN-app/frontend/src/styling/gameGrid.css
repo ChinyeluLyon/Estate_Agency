@@ -29,10 +29,14 @@
 .soldier{
     background-image: url(../images/soldier.png);
     background-repeat: no-repeat;
-    background-size: 50px;
+    background-size: 8vmin;
 }
 .soldier2{
     background-image: url(../images/soldier2.png);
     background-repeat: no-repeat;
-    background-size: 50px;
+    background-size: 8vmin;
+}
+
+.health{
+    color: red;
 }
