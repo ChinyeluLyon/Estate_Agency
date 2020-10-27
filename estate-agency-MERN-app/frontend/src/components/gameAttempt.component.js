@@ -7,8 +7,8 @@ export default class TestGame extends React.Component {
     constructor(props) {
         super(props)
 
-        const gridWidth = 8
-        const gridHeight = 8
+        const gridWidth = 10
+        const gridHeight = 10
         const gridArea = gridWidth * gridHeight
 
         this.state = {
@@ -40,17 +40,45 @@ export default class TestGame extends React.Component {
             defenderHP = tempDefenderHP
         }
         else if (attackerHP > defenderHP) {
-            let tempDefenderHP = Math.floor((defenderHP - (attackerHP - defenderHP) / 100))
+            let tempDefenderHP = defenderHP - Math.floor((0.25 * attackerHP))
             console.log("DAMAGE: " + (defenderHP - tempDefenderHP))
             defenderHP = tempDefenderHP
+            // console.log("diff: " + (attackerHP - defenderHP))
         }
         let tempPiecesHP = this.state.piecesHP.slice()
         tempPiecesHP[attacker] = attackerHP
         tempPiecesHP[defender] = defenderHP
         this.setState({
             piecesHP: tempPiecesHP
+        }, () => {
+            this.isPieceDead(attacker)
+            this.isPieceDead(defender)
         })
 
+    }
+
+    isPieceDead = (pieceNum) => {
+        if (this.state.piecesHP[pieceNum] <= 0) {
+            console.log("they dead!")
+            let tempGrid = this.state.grid.slice()
+            let tempClassArr = this.state.classArray.slice()
+            let tempPiecesHP = this.state.piecesHP.slice()
+
+            tempGrid[pieceNum] = ""
+            tempClassArr[pieceNum] = 'gridBox'
+            tempPiecesHP[pieceNum] = 100
+
+            this.setState({
+                grid: tempGrid,
+                classArray: tempClassArr,
+                piecesHP: tempPiecesHP
+            })
+
+        }
+        else {
+
+            console.log(this.state.piecesHP[pieceNum] + " all good ;D")
+        }
     }
 
     clickBox = (event) => {
@@ -121,7 +149,7 @@ export default class TestGame extends React.Component {
     }
 
     displayPath = (boxNum) => {
-        let steps = 2;
+        let steps = 4
         boxNum = parseInt(boxNum)
         // let rowSelectedBox = Math.floor(boxNum / 5)
         // let columnSelectedBox = boxNum - (rowSelectedBox * 5)
